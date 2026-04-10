@@ -121,6 +121,7 @@ def obter_historico(request: Request, db: Session = Depends(get_db)):
     try:
         consultas = db.query(ConsultaCashback).filter(ConsultaCashback.ip_usuario == ip).order_by(ConsultaCashback.criado_em.desc()).limit(20).all()
         return {"historico": [{
+            "id": c.id,
             "nome": c.nome,
             "tipo_cliente": c.tipo_cliente,
             "valor": c.valor,
@@ -128,7 +129,33 @@ def obter_historico(request: Request, db: Session = Depends(get_db)):
             "criado_em": c.criado_em.isoformat()
         } for c in consultas]}
     except Exception as e:
+        print(f"ERRO HISTORICO BD: {e}")
         return {"historico": [], "error": str(e)}
+
+@app.delete("/historico")
+def limpar_historico(request: Request, db: Session = Depends(get_db)):
+    ip = get_client_ip(request)
+    try:
+        db.query(ConsultaCashback).filter(ConsultaCashback.ip_usuario == ip).delete()
+        db.commit()
+        return {"status": "ok"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/historico/{item_id}")
+def deletar_item(item_id: int, request: Request, db: Session = Depends(get_db)):
+    ip = get_client_ip(request)
+    try:
+        item = db.query(ConsultaCashback).filter(ConsultaCashback.id == item_id, ConsultaCashback.ip_usuario == ip).first()
+        if not item:
+            raise HTTPException(status_code=404, detail="Item não encontrado")
+        db.delete(item)
+        db.commit()
+        return {"status": "ok"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Re-declarando os modelos Pydantic no final para evitar erro de escopo no dict acima se necessário
 class CalcularRequest(BaseModel):

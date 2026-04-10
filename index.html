@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calculadora de Cashback</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -121,7 +122,7 @@
 
     .hist-header {
       display: grid;
-      grid-template-columns: 200px 80px 110px 110px 1fr;
+      grid-template-columns: 200px 80px 110px 110px 1fr 40px;
       gap: 12px;
       padding: 10px 0;
       border-bottom: 0.5px solid #2a2a2a;
@@ -132,12 +133,44 @@
 
     .hist-row {
       display: grid;
-      grid-template-columns: 200px 80px 110px 110px 1fr;
+      grid-template-columns: 200px 80px 110px 110px 1fr 40px;
       gap: 12px;
       padding: 14px 0;
       border-bottom: 0.5px solid #1a1a1a;
       align-items: center;
     }
+
+    .btn-limpar {
+      background: transparent;
+      border: 1px solid #333;
+      color: #666;
+      padding: 4px 12px;
+      font-size: 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: auto;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .btn-limpar:hover { 
+      background: #e05555; 
+      color: #fff; 
+      border-color: #e05555; 
+    }
+
+    .btn-trash {
+      background: transparent;
+      border: none;
+      color: #444;
+      cursor: pointer;
+      font-size: 14px;
+      transition: color 0.2s;
+      width: auto;
+      padding: 8px;
+    }
+
+    .btn-trash:hover { color: #e05555; }
 
     .hist-row span { font-size: 13px; color: #bbb; }
     .hist-row .cash { color: #4caf74; font-weight: 500; }
@@ -189,8 +222,13 @@
     </div>
 
     <div class="card">
-      <h1>Histórico</h1>
-      <h2>Consultas</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+        <div>
+          <h1>Histórico</h1>
+          <h2>Consultas</h2>
+        </div>
+        <button class="btn-limpar" onclick="limparTudo()">Limpar tudo</button>
+      </div>
       <div id="historico"><div class="empty">Carregando...</div></div>
     </div>
   </div>
@@ -263,7 +301,7 @@
         }
 
         let html = `<div class="hist-header">
-          <span>Nome</span><span>Tipo</span><span>Valor</span><span>Cashback</span><span>Data</span>
+          <span>Nome</span><span>Tipo</span><span>Valor</span><span>Cashback</span><span>Data</span><span></span>
         </div>`;
 
         for (const row of data.historico) {
@@ -280,6 +318,9 @@
             <span>R$ ${parseFloat(row.valor).toFixed(2).replace(".", ",")}</span>
             <span class="cash">R$ ${parseFloat(row.cashback).toFixed(2).replace(".", ",")}</span>
             <span class="date">${data_fmt}</span>
+            <button class="btn-trash" onclick="deletarItem(${row.id})" title="Remover consulta">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>`;
         }
 
@@ -287,6 +328,26 @@
       } catch (e) {
         document.getElementById("historico").innerHTML =
           '<div class="empty">Erro ao carregar histórico.</div>';
+      }
+    }
+
+    async function deletarItem(id) {
+      if (!confirm("Tem certeza que deseja apagar este registro?")) return;
+      try {
+        await fetch(`/historico/${id}`, { method: "DELETE" });
+        carregarHistorico();
+      } catch (e) {
+        alert("Erro ao remover item.");
+      }
+    }
+
+    async function limparTudo() {
+      if (!confirm("Tem certeza que deseja limpar TODO o seu histórico?")) return;
+      try {
+        await fetch(`/historico`, { method: "DELETE" });
+        carregarHistorico();
+      } catch (e) {
+        alert("Erro ao limpar histórico.");
       }
     }
 
