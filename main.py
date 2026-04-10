@@ -4,6 +4,7 @@ from typing import List
 
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
@@ -85,6 +86,10 @@ def get_db():
 
 
 # --- Rotas da API ---
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("index.html")
 
 @app.post("/calcular", response_model=CalcularResponse)
 def calcular_cashback(req_data: CalcularRequest, request: Request, db: Session = Depends(get_db)):
