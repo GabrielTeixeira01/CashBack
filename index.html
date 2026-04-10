@@ -120,7 +120,7 @@
 
     .hist-header {
       display: grid;
-      grid-template-columns: 80px 1fr 1fr 1fr;
+      grid-template-columns: 1fr 60px 80px 80px 100px;
       gap: 8px;
       padding: 6px 0;
       border-bottom: 0.5px solid #2a2a2a;
@@ -131,7 +131,7 @@
 
     .hist-row {
       display: grid;
-      grid-template-columns: 80px 1fr 1fr 1fr;
+      grid-template-columns: 1fr 60px 80px 80px 100px;
       gap: 8px;
       padding: 10px 0;
       border-bottom: 0.5px solid #1a1a1a;
@@ -262,7 +262,7 @@
         }
 
         let html = `<div class="hist-header">
-          <span>Tipo</span><span>Valor</span><span>Cashback</span><span>Data</span>
+          <span>Nome</span><span>Tipo</span><span>Valor</span><span>Cashback</span><span>Data</span>
         </div>`;
 
         for (const row of data.historico) {
@@ -270,8 +270,11 @@
           const badge = tipo === "VIP"
             ? '<span class="badge vip">VIP</span>'
             : '<span class="badge normal">Normal</span>';
-          const data_fmt = new Date(row.criado_em).toLocaleString("pt-BR");
+          const data_fmt = new Date(row.criado_em).toLocaleString("pt-BR", {
+              day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+          });
           html += `<div class="hist-row">
+            <span style="font-weight: 500; color: #eee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${row.nome}</span>
             <span>${badge}</span>
             <span>R$ ${parseFloat(row.valor).toFixed(2).replace(".", ",")}</span>
             <span class="cash">R$ ${parseFloat(row.cashback).toFixed(2).replace(".", ",")}</span>

@@ -121,6 +121,7 @@ def obter_historico(request: Request, db: Session = Depends(get_db)):
     try:
         consultas = db.query(ConsultaCashback).filter(ConsultaCashback.ip_usuario == ip).order_by(ConsultaCashback.criado_em.desc()).limit(20).all()
         return {"historico": [{
+            "nome": c.nome,
             "tipo_cliente": c.tipo_cliente,
             "valor": c.valor,
             "cashback": c.cashback,
