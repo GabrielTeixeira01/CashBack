@@ -87,9 +87,15 @@ def get_db():
 
 # --- Rotas da API ---
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "database": str(engine.url.drivername)}
+
 @app.get("/")
 def serve_frontend():
     return FileResponse("index.html")
+
+print("Iniciando aplicação...")
 
 @app.post("/calcular", response_model=CalcularResponse)
 def calcular_cashback(req_data: CalcularRequest, request: Request, db: Session = Depends(get_db)):
