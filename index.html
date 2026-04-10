@@ -36,20 +36,34 @@
       padding: 32px;
     }
 
+    .header-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
     h1 {
       font-size: 11px;
       font-weight: 500;
       color: #555;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     h2 {
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 600;
       color: #eee;
-      margin-bottom: 30px;
+      margin: 0;
     }
 
     .saudacao {
@@ -194,8 +208,13 @@
 
   <div class="grid">
     <div class="card">
-      <h1>Calculadora</h1>
-      <h2>Cashback</h2>
+      <div class="header-group">
+        <img src="https://raw.githubusercontent.com/GabrielTeixeira01/cash/main/assets/logo.png" alt="Logo" class="logo" onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=N&backgroundColor=141414'">
+        <div>
+          <h1>Calculadora</h1>
+          <h2>Cashback</h2>
+        </div>
+      </div>
 
       <label>Seu nome</label>
       <input type="text" id="nome" placeholder="Ex: João" oninput="atualizarSaudacao()" />
