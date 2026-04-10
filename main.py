@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Configuração de Banco de Dados (Prioridade Railway)
+
 DATABASE_URL = os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL") or "sqlite:///./test.db"
 
 if DATABASE_URL.startswith("mysql://"):
@@ -22,7 +22,7 @@ engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# --- Modelos do Banco de Dados ---
+
 class ConsultaCashback(Base):
     __tablename__ = "consultas_cashback"
     id = Column(Integer, primary_key=True, index=True)
@@ -33,7 +33,7 @@ class ConsultaCashback(Base):
     cashback = Column(Float)
     criado_em = Column(DateTime, default=datetime.utcnow)
 
-# --- Esquemas de Dados ---
+
 class CalcularRequest(BaseModel):
     nome: str
     tipo_cliente: str
@@ -42,7 +42,7 @@ class CalcularRequest(BaseModel):
 class CalcularResponse(BaseModel):
     cashback: float
 
-# --- Configuração FastAPI ---
+
 app = FastAPI(title="Cashback API")
 
 app.add_middleware(
@@ -73,8 +73,6 @@ def startup_event():
             Base.metadata.create_all(bind=engine)
     except Exception as e:
         print(f"Erro na conexão com o banco de dados: {e}")
-
-# --- Rotas da API ---
 
 @app.get("/")
 def serve_frontend():
