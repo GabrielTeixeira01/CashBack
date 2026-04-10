@@ -195,8 +195,6 @@
   </div>
 
   <script>
-    // Como a API e o HTML agora rodam no mesmo servidor, as rotas podem ser relativas
-    const API_URL = "";
 
     function atualizarSaudacao() {
       const nome = document.getElementById("nome").value.trim();
@@ -229,7 +227,7 @@
       btn.textContent = "Calculando...";
 
       try {
-        const res = await fetch(`${API_URL}/calcular`, {
+        const res = await fetch(`/calcular`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nome, tipo_cliente: tipo, valor })
@@ -253,7 +251,7 @@
 
     async function carregarHistorico() {
       try {
-        const res = await fetch(`${API_URL}/historico`);
+        const res = await fetch(`/historico`);
         const data = await res.json();
         const div = document.getElementById("historico");
 
