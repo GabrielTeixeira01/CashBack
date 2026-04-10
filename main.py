@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Configuração do banco de dados
-DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MYSQL_URL") or "sqlite:///./test.db"
+# Prioridade para MYSQL_URL (padrão Railway) sobre DATABASE_URL
+DATABASE_URL = os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL") or "sqlite:///./test.db"
 
 if DATABASE_URL.startswith("mysql://"):
     DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
