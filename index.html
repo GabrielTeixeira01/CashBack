@@ -239,9 +239,10 @@
           "R$ " + data.cashback.toFixed(2).replace(".", ",");
         document.getElementById("resultado").style.display = "block";
 
-        carregarHistorico();
+        // Pequeno delay para garantir que o banco terminou a gravação antes do refresh
+        setTimeout(carregarHistorico, 500);
       } catch (e) {
-        erro.textContent = "Erro ao conectar com a API.";
+        erro.textContent = "Erro ao processar cashback. Verifique os logs do servidor.";
         erro.style.display = "block";
       }
 
